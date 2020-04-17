@@ -1,0 +1,6 @@
+stages:
+  - build
+  - deploy
+
+include:
+  - template: Docker.gitlab-ci.yml
