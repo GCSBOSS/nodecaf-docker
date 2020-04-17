@@ -1,14 +1,15 @@
 FROM node:13-alpine
 
 WORKDIR /cli
-RUN npm i -P nodecaf-cli
+RUN npm i -P --no-save nodecaf-cli
 RUN mkdir /dist
 RUN cp -r ./node_modules/nodecaf-cli/bin /dist/
 RUN cp -r ./node_modules/nodecaf-cli/lib /dist/
+RUN rm -rf ./node_modules/
+RUN npm i -P --no-save eclipt nodecaf-run
 RUN cp -r ./node_modules /dist/
-RUN ls /dist
 
-FROM node:13-alpine
+FROM mhart/alpine-node:slim-13
 
 ENV NODE_ENV production
 ENV APP_PATH /app
