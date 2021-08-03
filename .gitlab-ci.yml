@@ -1,6 +1,19 @@
 stages:
   - build
-  - deploy
 
-include:
-  - template: Docker.gitlab-ci.yml
+build:
+  # Use the official docker image.
+  image: docker:latest
+  stage: build
+  services:
+    - docker:dind
+  only:
+    refs:
+      - /^v\d+\.\d+\.\d+/
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD"
+  script:
+    - docker build --pull -t "gcsboss/nodecaf:${CI_COMMIT_TAG:1}" .
+    - docker build --pull -t "gcsboss/nodecaf" .
+    - docker push "gcsboss/nodecaf:${CI_COMMIT_TAG:1}"
+    - docker push "gcsboss/nodecaf"
